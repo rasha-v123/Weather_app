@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { CurrentWeatherCard } from "./components/CurrentWeatherCard";
 
 const API_KEY = "37a0291726683a58d45be3aacff4a6cb";
 
@@ -10,13 +11,20 @@ function App() {
   });
 
   const [currentData, setCurrentData] = useState({});
+  // const [hourlyData, setHourlyData] = useState([]);
+  // const [dailyData, setDailyData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   async function handleLocationSearch(e) {
     e.preventDefault();
     let response = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${API_KEY}`
+      `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.latitude}&lon=${coordinates.longitude}&units=imperial&appid=${API_KEY}`
     );
-    setCurrentData(response);
+    setCurrentData(response.data);
+    // setCurrentData(response.data.current);
+    // setHourlyData(response.data.hourly);
+    // setDailyData(response.data.daily);
+    setLoading(false);
     console.log(currentData);
   }
 
@@ -63,7 +71,7 @@ function App() {
           </button>
         </form>
       </div>
-      {JSON.stringify(currentData)}
+      {!loading && <CurrentWeatherCard weatherData={currentData} />}
     </div>
   );
 }
