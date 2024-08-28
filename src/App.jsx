@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { CurrentWeatherCard } from "./components/CurrentWeatherCard";
+import { Map } from "./components/Map";
 
 const API_KEY = "37a0291726683a58d45be3aacff4a6cb";
 
@@ -14,6 +15,7 @@ function App() {
   // const [hourlyData, setHourlyData] = useState([]);
   // const [dailyData, setDailyData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [timezone, setTimezone] = useState("");
 
   async function handleLocationSearch(e) {
     e.preventDefault();
@@ -24,6 +26,7 @@ function App() {
     // setCurrentData(response.data.current);
     // setHourlyData(response.data.hourly);
     // setDailyData(response.data.daily);
+    setTimezone(currentData.timezone);
     setLoading(false);
     console.log(currentData);
   }
@@ -39,6 +42,11 @@ function App() {
 
   return (
     <div className="w-screen h-screen flex flex-col bg-gradient-to-b from-blue-300 to-green-100">
+      <div className="mt-16">
+        <h3 className="text-center mb-5 text-2xl text-gray-600">
+          Latitude and Longitude search
+        </h3>
+      </div>
       <div className="mx-auto p-6 bg-white shadow-md rounded-lg">
         <form onSubmit={handleLocationSearch} className="space-y-4">
           <input
@@ -71,7 +79,25 @@ function App() {
           </button>
         </form>
       </div>
-      {!loading && <CurrentWeatherCard weatherData={currentData} />}
+      {!loading && (
+        <div className="mt-16 flex space-x-2">
+          <div>
+            <h3 className="text-2xl font-semibold text-gray-600 text-center mb-5">
+              Current Weather Information
+            </h3>
+            <CurrentWeatherCard weatherData={currentData} timezone={timezone} />
+          </div>
+          <div className="mt-16">
+            <h3 className="text-2xl font-semibold text-gray-600 text-center mb-5">
+              Location Map
+            </h3>
+            <Map
+              latitude={coordinates.latitude}
+              longitude={coordinates.longitude}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
